@@ -11,11 +11,11 @@ namespace Ddnd
         {
             List<string> args = arrayArgs.ToList();
 
-            string commandArg = args[0];
+            string commandArg = args.Count >= 1 ? args[0] : null;
 
             if (string.IsNullOrEmpty(commandArg))
             {
-                Console.WriteLine("No valid command arguments");
+                Console.WriteLine("No valid command argument provided");
             }
             else
             {
@@ -25,10 +25,10 @@ namespace Ddnd
                     {
                         Roll(args.GetRange(1,args.Count));
                     }
-                }
-                else
-                {
-                    Console.WriteLine("Not enough arguments provided to command roll");
+                    else
+                    {
+                        Console.WriteLine("Not enough arguments provided to command roll");
+                    }
                 }
             }
 
