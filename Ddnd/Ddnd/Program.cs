@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Ddnd
@@ -30,15 +32,58 @@ namespace Ddnd
                         Console.WriteLine("Not enough arguments provided to command roll");
                     }
                 }
+
+                if(commandArg.ToLower() == "getname")
+                {
+                    GetName();
+                }
+
+                if(commandArg.ToLower() == "getfullname")
+                {
+                    GetFullName();
+                }
             }
 
         }
-
-        //Roll command
-        //command parse and roll code ehre
+        
         private static void Roll(List<string> args)
         {
 
         }
+
+        private static void GetName()
+        {   
+            using (StreamReader r = new StreamReader("./json/names.json"))
+            {
+                string namesJson = r.ReadToEnd();
+                List<string> namesList = JsonConvert.DeserializeObject<RootNamesJson>(namesJson).Names;
+
+                Random random = new Random();
+                int randomIndex = random.Next(0, namesList.Count - 1);
+
+                Console.WriteLine(namesList[randomIndex]);
+            }
+        }        
+
+        private static void GetFullName()
+        {
+            using (StreamReader r = new StreamReader("./json/names.json"))
+            {
+                string namesJson = r.ReadToEnd();
+                List<string> namesList = JsonConvert.DeserializeObject<RootNamesJson>(namesJson).Names;
+
+                Random random = new Random();
+                int randomIndex1 = random.Next(0, namesList.Count - 1);
+                int randomIndex2 = random.Next(0, namesList.Count - 1);
+
+                Console.WriteLine(namesList[randomIndex1] + " " + namesList[randomIndex2]);
+            }
+        }
+
+        public class RootNamesJson
+        {
+            public List<string> Names { get; set; }
+        }
+
     }
 }
