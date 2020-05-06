@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace Ddnd
 {
@@ -21,29 +22,27 @@ namespace Ddnd
             }
             else
             {
-                if(commandArg.ToLower() == "roll")
-                {
-                    if (args.Count >= 2)
-                    {
-                        Roll(args.GetRange(1,args.Count));
-                    }
-                    else
-                    {
-                        Console.WriteLine("Not enough arguments provided to command roll");
-                    }
-                }
+                List<string> commandArgs = args.Count >= 2 ? args.GetRange(1, args.Count) : new List<string>();
 
-                if(commandArg.ToLower() == "getname")
+                switch (commandArg.ToLower())
                 {
-                    GetName();
-                }
-
-                if(commandArg.ToLower() == "getfullname")
-                {
-                    GetFullName();
+                    case "roll":
+                        Roll(commandArgs);
+                        break;
+                    case "getname":
+                        GetName();
+                        break;
+                    case "getfullname":
+                        GetFullName();
+                        break;
+                    case "getrandomname":
+                        GetRandomName();
+                        break;
+                    default:
+                        Console.WriteLine(commandArg + " is not a support command");
+                        break;
                 }
             }
-
         }
         
         private static void Roll(List<string> args)
@@ -83,6 +82,50 @@ namespace Ddnd
         public class RootNamesJson
         {
             public List<string> Names { get; set; }
+        }
+
+        private static void GetRandomName()
+        {
+            List<string> vowels = new List<string>() { "a", "e", "i", "o", "u", "y" };
+            List<string> consonants = new List<string>() { "b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "y", "z" };
+
+            Random random = new Random();
+
+            int numSyllables = random.Next(10) + 1;//1-10 sylls
+
+            string name = "";
+
+            bool mustHaveStartConsonant = random.NextBool();
+            bool mustHaveEndConsonant = random.NextBool();
+
+            for(int i = 0; i < numSyllables; i++)
+            {
+                bool hasStartingConsonant = mustHaveStartConsonant ? mustHaveStartConsonant : random.NextBool();
+                bool hasEndingConsonant = mustHaveEndConsonant ? mustHaveEndConsonant : random.NextBool();
+                string syll = "";
+
+                if (hasStartingConsonant)
+                {
+                    string randomCons = consonants[random.Next(consonants.Count)];
+                    syll += randomCons;
+                }
+                string randomVowel = vowels[random.Next(vowels.Count)];
+                syll += randomVowel;
+                if (hasEndingConsonant)
+                {
+                    string randomCons = consonants[random.Next(consonants.Count)];
+                    syll += randomCons;
+                }
+
+                name += syll;
+
+                //set consonant flags for next syllable
+                mustHaveStartConsonant = !hasEndingConsonant;
+                mustHaveEndConsonant = random.NextBool();
+            }
+
+            Console.WriteLine(name);
+            return;
         }
 
     }
