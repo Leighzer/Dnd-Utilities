@@ -22,7 +22,7 @@ namespace Ddnd
             }
             else
             {
-                List<string> commandArgs = args.Count >= 2 ? args.GetRange(1, args.Count) : new List<string>();
+                List<string> commandArgs = args.Count >= 2 ? args.GetRange(1, args.Count - 1) : new List<string>();
 
                 switch (commandArg.ToLower())
                 {
@@ -42,7 +42,7 @@ namespace Ddnd
                         GetMonster();
                         break;
                     default:
-                        Console.WriteLine(commandArg + " is not a support command");
+                        Console.WriteLine(commandArg + " is not a supported command");
                         break;
                 }
             }
@@ -50,6 +50,55 @@ namespace Ddnd
         
         private static void Roll(List<string> args)
         {
+            Random random = new Random();
+
+            for(int i = 0; i < args.Count; i++)
+            {
+                string arg = args[i];
+
+                var split = arg.Split('d');
+                
+
+                if(split.Length == 2)
+                {
+                    var rollsString = split[0];
+                    var facesString = split[1];
+
+                    int numRolls;
+                    int numFaces;
+
+                    if (string.IsNullOrWhiteSpace(rollsString))
+                    {
+                        numRolls = 1;
+                    }
+                    else
+                    {
+                        if (!int.TryParse(rollsString, out numRolls))
+                        {
+                            Console.WriteLine($"{rollsString} is not a valid number of rolls - dice skipped");
+                            continue;
+                        }
+                    }
+                    
+                    if(!int.TryParse(facesString,out numFaces))
+                    {
+                        Console.WriteLine($"{facesString} is not a valid number of faces - dice skipped");
+                        continue;
+                    }
+
+                    Console.Write($"{numRolls} roll(s) of a d{numFaces} yields: ");
+                    for(int j = 0; j < numRolls; j++)
+                    {
+                        int rollResult = random.Next(numFaces) + 1;
+                        Console.Write($"{rollResult} ");
+                    }
+                    Console.WriteLine("");
+                }
+                else
+                {
+                    Console.WriteLine($"{arg} is not a valid roll argument");
+                }
+            }
 
         }
 
