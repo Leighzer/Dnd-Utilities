@@ -38,6 +38,9 @@ namespace Ddnd
                     case "getrandomname":
                         GetRandomName();
                         break;
+                    case "getmonster":
+                        GetMonster();
+                        break;
                     default:
                         Console.WriteLine(commandArg + " is not a support command");
                         break;
@@ -128,5 +131,90 @@ namespace Ddnd
             return;
         }
 
+        public static void GetMonster()
+        {
+            Random random = new Random();
+
+            StreamReader monsterReader = new StreamReader("./json/monsters.json");
+            string monsterJson = monsterReader.ReadToEnd();
+            List<string> monsterList = JsonConvert.DeserializeObject<RootMonstersJson>(monsterJson).Monsters;
+            monsterReader.Dispose();
+
+            StreamReader adjectivesReader = new StreamReader("./json/adjectives.json");
+            string adjectiveJson = adjectivesReader.ReadToEnd();
+            List<string> adjectiveList = JsonConvert.DeserializeObject<RootAdjectivesJson>(adjectiveJson).Adjectives;
+            adjectivesReader.Dispose();
+
+
+            List<int> legOptions = new List<int>() { 0, 2, 4, 6, 8 };
+
+            int numLegs = legOptions[random.Next(legOptions.Count)];
+
+            bool hasWings = random.NextDouble() > 0.9;
+
+            List<int> armOptions = new List<int>() { 0, 2, 4 };
+
+            int numArms = armOptions[random.Next(armOptions.Count)];
+
+            int numAdjectives = random.Next(3) + 1;
+            List<string> adjectives = new List<string>();
+            for(int i = 0; i < numAdjectives; i++)
+            {
+                bool isDone = false;
+                while (!isDone)
+                {
+                    string candidateAdjective = adjectiveList[random.Next(adjectiveList.Count())];
+                    if (!adjectives.Contains(candidateAdjective))
+                    {
+                        adjectives.Add(candidateAdjective);
+                        isDone = true;
+                    }
+                }
+            }
+
+            string monsterType = monsterList[random.Next(monsterList.Count)];
+
+            string monsterString = "";
+
+            if (hasWings)
+            {
+                monsterString += "winged ";
+            }
+
+            if(numArms > 0)
+            {
+                monsterString += $"{numArms} armed ";
+            }
+
+            if(numLegs > 0)
+            {
+                monsterString += $"{numLegs} legged ";
+            }
+            else
+            {
+                monsterString += "slithering ";
+            }
+
+            for(int i = 0; i < adjectives.Count; i++)
+            {
+                monsterString += $"{adjectives[i]} ";
+            }
+
+            monsterString += $"{monsterType} ";
+
+            Console.WriteLine(monsterString);
+
+            return;
+        }
+
+        public class RootMonstersJson
+        {
+            public List<string> Monsters { get; set; }
+        }
+
+        public class RootAdjectivesJson
+        {
+            public List<string> Adjectives { get; set; }
+        }
     }
 }
