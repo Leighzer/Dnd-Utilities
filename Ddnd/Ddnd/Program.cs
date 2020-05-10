@@ -185,6 +185,10 @@ namespace Ddnd
             {
                 monsterString += $"{numArms} armed ";
             }
+            else
+            {
+                monsterString += "armless ";
+            }
 
             if(numLegs > 0)
             {
