@@ -138,7 +138,7 @@ namespace Ddnd
 
         private static void GetRandomName()
         {
-            List<string> vowels = new List<string>() { "a", "e", "i", "o", "u", "y" };
+            List<string> vowels = new List<string>() { "a", "e", "i", "o", "u" };
             List<string> consonants = new List<string>() { "b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "y", "z" };
 
             Random random = new Random();
