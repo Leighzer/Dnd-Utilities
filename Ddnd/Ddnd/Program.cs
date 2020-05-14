@@ -38,6 +38,9 @@ namespace Ddnd
                     case "getrandomname":
                         GetRandomName();
                         break;
+                    case "getrandomfullname":
+                        GetRandomFullName();
+                        break;
                     case "getmonster":
                         GetMonster();
                         break;
@@ -138,6 +141,13 @@ namespace Ddnd
 
         private static void GetRandomName()
         {
+            string name = getRandomName();
+            Console.WriteLine(name);
+            return;
+        }
+
+        private static string getRandomName()
+        {
             List<string> vowels = new List<string>() { "a", "e", "i", "o", "u" };
             List<string> consonants = new List<string>() { "b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "y", "z" };
 
@@ -150,7 +160,7 @@ namespace Ddnd
             bool mustHaveStartConsonant = random.NextBool();
             bool mustHaveEndConsonant = random.NextBool();
 
-            for(int i = 0; i < numSyllables; i++)
+            for (int i = 0; i < numSyllables; i++)
             {
                 bool hasStartingConsonant = mustHaveStartConsonant ? mustHaveStartConsonant : random.NextBool();
                 bool hasEndingConsonant = mustHaveEndConsonant ? mustHaveEndConsonant : random.NextBool();
@@ -176,7 +186,15 @@ namespace Ddnd
                 mustHaveEndConsonant = random.NextBool();
             }
 
-            Console.WriteLine(name);
+            return name;
+        }
+
+        public static void GetRandomFullName()
+        {
+            string firstName = getRandomName();
+            string lastName = getRandomName();
+
+            Console.WriteLine(firstName + " " + lastName);
             return;
         }
 
