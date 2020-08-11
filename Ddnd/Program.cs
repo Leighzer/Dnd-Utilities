@@ -3,13 +3,16 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices.ComTypes;
 
 namespace Ddnd
 {
+    //imagined program usage ddnd [command] [commandArg1] [commandArg2] ... [commandArgN]
     public class Program
     {
-        //imagined program usage ddnd [command] [commandArg1] [commandArg2] ... [commandArgN]
+        private static readonly string appDir = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().Location).LocalPath);
+
         public static void Main(string[] arrayArgs)
         {
             List<string> args = arrayArgs.ToList();
@@ -107,7 +110,7 @@ namespace Ddnd
 
         private static void GetName()
         {   
-            using (StreamReader r = new StreamReader("./json/names.json"))
+            using (StreamReader r = new StreamReader(appDir + "/json/names.json"))
             {
                 string namesJson = r.ReadToEnd();
                 List<string> namesList = JsonConvert.DeserializeObject<RootNamesJson>(namesJson).Names;
@@ -121,7 +124,7 @@ namespace Ddnd
 
         private static void GetFullName()
         {
-            using (StreamReader r = new StreamReader("./json/names.json"))
+            using (StreamReader r = new StreamReader(appDir + "/json/names.json"))
             {
                 string namesJson = r.ReadToEnd();
                 List<string> namesList = JsonConvert.DeserializeObject<RootNamesJson>(namesJson).Names;
@@ -202,12 +205,12 @@ namespace Ddnd
         {
             Random random = new Random();
 
-            StreamReader monsterReader = new StreamReader("./json/monsters.json");
+            StreamReader monsterReader = new StreamReader(appDir + "/json/monsters.json");
             string monsterJson = monsterReader.ReadToEnd();
             List<string> monsterList = JsonConvert.DeserializeObject<RootMonstersJson>(monsterJson).Monsters;
             monsterReader.Dispose();
 
-            StreamReader adjectivesReader = new StreamReader("./json/adjectives.json");
+            StreamReader adjectivesReader = new StreamReader(appDir + "/json/adjectives.json");
             string adjectiveJson = adjectivesReader.ReadToEnd();
             List<string> adjectiveList = JsonConvert.DeserializeObject<RootAdjectivesJson>(adjectiveJson).Adjectives;
             adjectivesReader.Dispose();
