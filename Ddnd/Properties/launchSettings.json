@@ -1,7 +1,8 @@
 {
   "profiles": {
     "Ddnd": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "getFullName"
     }
   }
 }

@@ -8,7 +8,7 @@ using System.Runtime.InteropServices.ComTypes;
 
 namespace Ddnd
 {
-    //imagined program usage ddnd [command] [commandArg1] [commandArg2] ... [commandArgN]
+    // imagined program usage ddnd [command] [commandArg1] [commandArg2] ... [commandArgN]
     public class Program
     {
         private static readonly string appDir = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().Location).LocalPath);
@@ -184,7 +184,7 @@ namespace Ddnd
 
                 name += syll;
 
-                //set consonant flags for next syllable
+                // set consonant flags for next syllable
                 mustHaveStartConsonant = !hasEndingConsonant;
                 mustHaveEndConsonant = random.NextBool();
             }
