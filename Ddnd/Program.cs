@@ -1,10 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices.ComTypes;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Ddnd
 {
@@ -12,6 +13,7 @@ namespace Ddnd
     public class Program
     {
         private static readonly string appDir = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().Location).LocalPath);
+
 
         public static void Main(string[] arrayArgs)
         {
@@ -53,19 +55,19 @@ namespace Ddnd
                 }
             }
         }
-        
+
         private static void Roll(List<string> args)
         {
             Random random = new Random();
 
-            for(int i = 0; i < args.Count; i++)
+            for (int i = 0; i < args.Count; i++)
             {
                 string arg = args[i];
 
                 var split = arg.Split('d');
-                
 
-                if(split.Length == 2)
+
+                if (split.Length == 2)
                 {
                     var rollsString = split[0];
                     var facesString = split[1];
@@ -85,15 +87,15 @@ namespace Ddnd
                             continue;
                         }
                     }
-                    
-                    if(!int.TryParse(facesString,out numFaces))
+
+                    if (!int.TryParse(facesString, out numFaces))
                     {
                         Console.WriteLine($"{facesString} is not a valid number of faces - dice skipped");
                         continue;
                     }
 
                     Console.Write($"{numRolls} roll(s) of a d{numFaces} yields: ");
-                    for(int j = 0; j < numRolls; j++)
+                    for (int j = 0; j < numRolls; j++)
                     {
                         int rollResult = random.Next(numFaces) + 1;
                         Console.Write($"{rollResult} ");
@@ -109,25 +111,25 @@ namespace Ddnd
         }
 
         private static void GetName()
-        {   
+        {
             using (StreamReader r = new StreamReader(appDir + "/json/names.json"))
             {
                 string namesJson = r.ReadToEnd();
-                List<string> namesList = JsonConvert.DeserializeObject<RootNamesJson>(namesJson).Names;
+                List<string> namesList = JsonSerializer.Deserialize<RootNamesJson>(namesJson).Names;
 
                 Random random = new Random();
                 int randomIndex = random.Next(0, namesList.Count - 1);
 
                 Console.WriteLine(namesList[randomIndex]);
             }
-        }        
+        }
 
         private static void GetFullName()
         {
             using (StreamReader r = new StreamReader(appDir + "/json/names.json"))
             {
                 string namesJson = r.ReadToEnd();
-                List<string> namesList = JsonConvert.DeserializeObject<RootNamesJson>(namesJson).Names;
+                List<string> namesList = JsonSerializer.Deserialize<RootNamesJson>(namesJson).Names;
 
                 Random random = new Random();
                 int randomIndex1 = random.Next(0, namesList.Count - 1);
@@ -139,6 +141,7 @@ namespace Ddnd
 
         public class RootNamesJson
         {
+            [JsonPropertyName("names")]
             public List<string> Names { get; set; }
         }
 
@@ -207,12 +210,12 @@ namespace Ddnd
 
             StreamReader monsterReader = new StreamReader(appDir + "/json/monsters.json");
             string monsterJson = monsterReader.ReadToEnd();
-            List<string> monsterList = JsonConvert.DeserializeObject<RootMonstersJson>(monsterJson).Monsters;
+            List<string> monsterList = JsonSerializer.Deserialize<RootMonstersJson>(monsterJson).Monsters;
             monsterReader.Dispose();
 
             StreamReader adjectivesReader = new StreamReader(appDir + "/json/adjectives.json");
             string adjectiveJson = adjectivesReader.ReadToEnd();
-            List<string> adjectiveList = JsonConvert.DeserializeObject<RootAdjectivesJson>(adjectiveJson).Adjectives;
+            List<string> adjectiveList = JsonSerializer.Deserialize<RootAdjectivesJson>(adjectiveJson).Adjectives;
             adjectivesReader.Dispose();
 
 
@@ -228,7 +231,7 @@ namespace Ddnd
 
             int numAdjectives = random.Next(3) + 1;
             List<string> adjectives = new List<string>();
-            for(int i = 0; i < numAdjectives; i++)
+            for (int i = 0; i < numAdjectives; i++)
             {
                 bool isDone = false;
                 while (!isDone)
@@ -251,7 +254,7 @@ namespace Ddnd
                 monsterString += "winged ";
             }
 
-            if(numArms > 0)
+            if (numArms > 0)
             {
                 monsterString += $"{numArms} armed ";
             }
@@ -260,7 +263,7 @@ namespace Ddnd
                 monsterString += "armless ";
             }
 
-            if(numLegs > 0)
+            if (numLegs > 0)
             {
                 monsterString += $"{numLegs} legged ";
             }
@@ -269,7 +272,7 @@ namespace Ddnd
                 monsterString += "slithering ";
             }
 
-            for(int i = 0; i < adjectives.Count; i++)
+            for (int i = 0; i < adjectives.Count; i++)
             {
                 monsterString += $"{adjectives[i]} ";
             }
@@ -283,11 +286,13 @@ namespace Ddnd
 
         public class RootMonstersJson
         {
+            [JsonPropertyName("monsters")]
             public List<string> Monsters { get; set; }
         }
 
         public class RootAdjectivesJson
         {
+            [JsonPropertyName("adjectives")]
             public List<string> Adjectives { get; set; }
         }
     }
